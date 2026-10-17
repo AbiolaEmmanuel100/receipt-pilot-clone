@@ -1,9 +1,0 @@
-name = "receipt-pilot-c-worker"
-main = "src/index.ts"
-compatibility_date = "2026-10-17"
-
-# Secrets (set with wrangler secret put — never commit):
-# PAYSTACK_SECRET_KEY
-# PAYSTACK_WEBHOOK_SECRET
-# SUPABASE_URL
-# SUPABASE_SERVICE_ROLE_KEY
