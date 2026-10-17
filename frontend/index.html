@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Receipt Pilot-C</title>
+  <meta name="description" content="Receipts, inventory and daily records for small businesses. Works offline." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/src/styles/main.css" />
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <span class="logo">RP</span>
+        <div>
+          <span class="brand-name">Receipt Pilot</span>
+          <span class="brand-sub">for shops & stores</span>
+        </div>
+      </div>
+      <nav class="nav" aria-label="Main">
+        <div class="nav-label">Today</div>
+        <button class="nav-item active" data-page="dashboard">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1v-9.5Z"/></svg>
+          Dashboard
+        </button>
+        <button class="nav-item" data-page="receipts">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 3h10a1 1 0 0 1 1 1v17l-2.2-1.2L13.5 21 11 19.6 8.2 21 7 20.2V4a1 1 0 0 1 1-1Z"/><path d="M9 8h6M9 12h6M9 16h3"/></svg>
+          Receipts
+        </button>
+        <button class="nav-item" data-page="sales">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V5M4 19h16"/><path d="m7 14 3.5-4 3 2.5L18 7"/></svg>
+          Sales
+        </button>
+        <div class="nav-label">Stock</div>
+        <button class="nav-item" data-page="products">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7.5 12 4l8 3.5v9L12 20l-8-3.5v-9Z"/><path d="M12 11.2 20 7.5M12 11.2V20M12 11.2 4 7.5"/></svg>
+          Products
+        </button>
+        <button class="nav-item" data-page="restock">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 8h12l-2-2M16 8l-2 2M20 16H8l2 2M8 16l2-2"/></svg>
+          Restocking
+        </button>
+        <div class="nav-label">Money</div>
+        <button class="nav-item" data-page="expenses">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/></svg>
+          Expenses
+        </button>
+        <button class="nav-item" data-page="customers">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3"/><path d="M3.5 19c.6-2.6 2.7-4 5.5-4s4.9 1.4 5.5 4"/><circle cx="17" cy="9" r="2.2"/><path d="M16.5 15.2c1.7.3 3 1.4 3.5 3.3"/></svg>
+          Customers
+        </button>
+        <button class="nav-item" data-page="reports">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 19V9M12 19V5M19 19v-7"/></svg>
+          Reports
+        </button>
+        <div class="nav-label">Account</div>
+        <button class="nav-item" data-page="settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2.2M12 18.3v2.2M3.5 12h2.2M18.3 12h2.2M6 6l1.6 1.6M16.4 16.4 18 18M18 6l-1.6 1.6M7.6 16.4 6 18"/></svg>
+          Settings
+        </button>
+      </nav>
+      <div class="sidebar-footer"><strong>Guest mode</strong><br />Records stay on this device. Offline ready.</div>
+    </aside>
+
+    <div class="main-wrap">
+      <header class="topbar">
+        <button class="menu-toggle" id="menu-toggle" aria-label="Open menu">☰</button>
+        <h1 class="page-title" id="page-title">Dashboard</h1>
+        <div class="topbar-actions">
+          <button class="btn btn-primary" id="quick-new-receipt">New receipt</button>
+        </div>
+      </header>
+
+      <main class="content" id="content">
+        <section id="page-dashboard" class="page active">
+          <div class="page-head">
+            <h2 id="greeting">Welcome</h2>
+            <p id="today-date"></p>
+          </div>
+          <div class="metrics">
+            <div class="metric-card">
+              <div class="metric-label">Today’s sales</div>
+              <div class="metric-value" id="metric-today">—</div>
+              <div class="metric-note">From receipts dated today</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Outstanding</div>
+              <div class="metric-value" id="metric-outstanding">—</div>
+              <div class="metric-note">Unpaid balances on this device</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Receipts today</div>
+              <div class="metric-value" id="metric-count">—</div>
+              <div class="metric-note">Count, not cash collected</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Low stock</div>
+              <div class="metric-value" id="metric-lowstock">—</div>
+              <div class="metric-note">Active products at or below threshold</div>
+            </div>
+          </div>
+          <div class="quick-actions">
+            <button class="btn btn-primary" data-goto="receipts">Create receipt</button>
+            <button class="btn btn-secondary" data-goto="products">Manage products</button>
+            <button class="btn btn-secondary" data-goto="restock">Record stock</button>
+          </div>
+          <div class="card">
+            <div class="card-head">
+              <h3>Recent receipts</h3>
+            </div>
+            <div id="dashboard-recent" class="empty-state">
+              <div class="empty-icon">☰</div>
+              <h3>No receipts yet</h3>
+              <p>Create your first receipt to see today’s activity here.</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="page-receipts" class="page">
+          <div class="page-head">
+            <h2>Receipts</h2>
+            <p>Build a receipt, preview it, then save it on this device.</p>
+          </div>
+          <div class="receipt-layout">
+            <div class="card form-card">
+              <h2>Create or edit</h2>
+              <form id="receipt-form" novalidate>
+                <fieldset>
+                  <legend>Business</legend>
+                  <div class="grid-2">
+                    <label>Business name<input type="text" id="biz-name" required placeholder="Your shop name" /></label>
+                    <label>Phone<input type="tel" id="biz-phone" /></label>
+                  </div>
+                  <label>Address<textarea id="biz-address" rows="2"></textarea></label>
+                  <div class="grid-2">
+                    <label>Email<input type="email" id="biz-email" /></label>
+                    <label>Website<input type="url" id="biz-website" /></label>
+                  </div>
+                  <label>Footer<input type="text" id="biz-footer" placeholder="Thank you for your business" /></label>
+                </fieldset>
+                <fieldset>
+                  <legend>Customer</legend>
+                  <div class="grid-2">
+                    <label>Name<input type="text" id="cust-name" /></label>
+                    <label>Phone<input type="tel" id="cust-phone" /></label>
+                  </div>
+                  <label>Email<input type="email" id="cust-email" /></label>
+                </fieldset>
+                <fieldset>
+                  <legend>Items</legend>
+                  <div id="items-container"></div>
+                  <button type="button" id="add-item" class="btn btn-secondary btn-sm">Add item</button>
+                </fieldset>
+                <fieldset>
+                  <legend>Amounts</legend>
+                  <div class="grid-3">
+                    <label>Discount<input type="number" id="discount" min="0" step="0.01" value="0" /></label>
+                    <label>Tax %<input type="number" id="tax-pct" min="0" max="100" step="0.01" value="0" /></label>
+                    <label>Currency
+                      <select id="currency">
+                        <option value="NGN">NGN</option>
+                        <option value="USD">USD</option>
+                        <option value="GBP">GBP</option>
+                        <option value="EUR">EUR</option>
+                      </select>
+                    </label>
+                  </div>
+                  <div class="grid-2">
+                    <label>Amount paid<input type="number" id="amount-paid" min="0" step="0.01" value="0" /></label>
+                    <label>Payment status
+                      <select id="payment-status">
+                        <option value="UNPAID">Unpaid</option>
+                        <option value="PARTIAL">Partial</option>
+                        <option value="PAID">Paid</option>
+                      </select>
+                    </label>
+                  </div>
+                  <label>Payment method
+                    <select id="payment-method">
+                      <option>Cash</option>
+                      <option>Transfer</option>
+                      <option>Card</option>
+                      <option>Other</option>
+                    </select>
+                  </label>
+                </fieldset>
+                <fieldset>
+                  <legend>Details</legend>
+                  <div class="grid-2">
+                    <label>Date<input type="date" id="receipt-date" /></label>
+                    <label>Receipt number<input type="text" id="receipt-number" /></label>
+                  </div>
+                  <label>Notes<textarea id="notes" rows="2"></textarea></label>
+                </fieldset>
+                <div class="actions">
+                  <button type="submit" class="btn btn-primary">Save receipt</button>
+                  <button type="button" id="new-receipt" class="btn btn-secondary">New</button>
+                </div>
+              </form>
+            </div>
+            <div class="card preview-card">
+              <div class="card-head">
+                <h2>Preview</h2>
+                <button type="button" id="print-preview" class="btn btn-secondary btn-sm">Print</button>
+              </div>
+              <div id="receipt-preview" class="receipt-preview"></div>
+            </div>
+          </div>
+          <div class="card" style="margin-top:1rem">
+            <h3>Saved on this device</h3>
+            <ul id="records-list" class="records-list"></ul>
+          </div>
+        </section>
+
+        <section id="page-sales" class="page">
+          <div class="page-head">
+            <h2>Sales</h2>
+            <p>A dedicated sales ledger is planned. Today’s figures are on the dashboard.</p>
+          </div>
+          <div class="card empty-state">
+            <div class="empty-icon">↗</div>
+            <h3>Sales view coming later</h3>
+            <p>Receipts you save already feed today’s sales and outstanding balances. A full sales history, filters, and trends will be added in a later stage. No sample data is shown here.</p>
+          </div>
+        </section>
+
+        <section id="page-products" class="page">
+          <div class="page-head">
+            <h2>Products & inventory</h2>
+            <p>Catalogue, prices, and manually maintained stock.</p>
+          </div>
+          <div class="card">
+            <div class="card-head">
+              <h2>Catalogue</h2>
+              <button type="button" class="btn btn-primary" id="new-product">Add product</button>
+            </div>
+            <label>Search
+              <input type="search" id="product-search" placeholder="Name, SKU or category" />
+            </label>
+            <div id="product-form-wrap" class="card" style="display:none;margin:1rem 0;background:#faf9f7">
+              <h3 id="product-form-title">Add product</h3>
+              <form id="product-form">
+                <div class="grid-2">
+                  <label>Name<input type="text" id="prod-name" required /></label>
+                  <label>SKU / code<input type="text" id="prod-sku" /></label>
+                </div>
+                <div class="grid-2">
+                  <label>Category<input type="text" id="prod-category" /></label>
+                  <label>Stock quantity<input type="number" id="prod-stock" min="0" step="1" value="0" /></label>
+                </div>
+                <div class="grid-3">
+                  <label>Selling price<input type="number" id="prod-sell" min="0" step="0.01" value="0" /></label>
+                  <label>Cost price<input type="number" id="prod-cost" min="0" step="0.01" value="0" /></label>
+                  <label>Low-stock threshold<input type="number" id="prod-threshold" min="0" step="1" value="0" /></label>
+                </div>
+                <div id="product-errors" class="error-text"></div>
+                <div class="actions">
+                  <button type="submit" class="btn btn-primary">Save product</button>
+                  <button type="button" class="btn btn-secondary" id="cancel-product">Cancel</button>
+                </div>
+              </form>
+            </div>
+            <div id="products-list" style="margin-top:0.5rem">
+              <div class="empty-state">
+                <div class="empty-icon">▣</div>
+                <h3>No products yet</h3>
+                <p>Add your first product to track price and stock.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="page-restock" class="page">
+          <div class="page-head">
+            <h2>Restocking</h2>
+            <p>Record goods in, adjustments, and physical counts. Every change is kept.</p>
+          </div>
+          <div class="card">
+            <h2>Record a movement</h2>
+            <form id="movement-form">
+              <div class="grid-2">
+                <label>Product
+                  <select id="mov-product"></select>
+                </label>
+                <label>Type
+                  <select id="mov-type">
+                    <option value="RESTOCK">Restock (goods in)</option>
+                    <option value="ADJUSTMENT">Manual adjustment</option>
+                    <option value="COUNT">Physical count</option>
+                    <option value="OPENING">Opening stock</option>
+                  </select>
+                </label>
+              </div>
+              <div class="grid-2">
+                <label id="mov-qty-label">Quantity
+                  <input type="number" id="mov-qty" step="1" min="0" value="1" />
+                </label>
+                <label>Reason
+                  <input type="text" id="mov-reason" placeholder="Delivery, damage, count, etc." />
+                </label>
+              </div>
+              <div id="mov-hint" class="section-note"></div>
+              <div id="mov-errors" class="error-text"></div>
+              <div class="actions">
+                <button type="submit" class="btn btn-primary">Record movement</button>
+              </div>
+            </form>
+          </div>
+          <div class="card" style="margin-top:1rem">
+            <h3>Movement history</h3>
+            <div id="movements-list" class="empty-state">
+              <div class="empty-icon">↔</div>
+              <h3>No movements yet</h3>
+              <p>Restocks, adjustments, and counts will appear here.</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="page-expenses" class="page">
+          <div class="page-head">
+            <h2>Expenses</h2>
+            <p>Operating costs such as rent, transport, and supplies.</p>
+          </div>
+          <div class="card empty-state">
+            <div class="empty-icon">▤</div>
+            <h3>Expense tracking is next</h3>
+            <p>This screen will hold dated expenses by category. Nothing is recorded here yet, so there is no total to show. A zero would mean you have recorded no costs — that is not the case; the feature is not available yet.</p>
+          </div>
+        </section>
+
+        <section id="page-customers" class="page">
+          <div class="page-head">
+            <h2>Customers</h2>
+            <p>Balances and purchase history.</p>
+          </div>
+          <div class="card empty-state">
+            <div class="empty-icon">☺</div>
+            <h3>Customer records are planned</h3>
+            <p>You can still type a customer on each receipt. A shared customer list with outstanding balances will be added later. No sample customers are shown.</p>
+          </div>
+        </section>
+
+        <section id="page-reports" class="page">
+          <div class="page-head">
+            <h2>Reports</h2>
+            <p>Period summaries once the full ledger is in place.</p>
+          </div>
+          <div class="card empty-state">
+            <div class="empty-icon">▦</div>
+            <h3>Reports are not available yet</h3>
+            <p>Dashboard figures come only from receipts and products on this device. Profit, cash collected, and stock valuation reports will appear here later. Unavailable is not the same as zero.</p>
+          </div>
+        </section>
+
+        <section id="page-settings" class="page">
+          <div class="page-head">
+            <h2>Settings</h2>
+            <p>How this device is set up right now.</p>
+          </div>
+          <div class="settings-grid">
+            <div class="card">
+              <h3>This device</h3>
+              <div class="setting-row"><div><strong>Mode</strong><span>Guest, local only</span></div></div>
+              <div class="setting-row"><div><strong>Storage</strong><span>IndexedDB in this browser</span></div></div>
+              <div class="setting-row"><div><strong>Sync</strong><span>Not connected</span></div></div>
+            </div>
+            <div class="card">
+              <h3>Business profile</h3>
+              <p class="muted">A shared business profile will be saved with the account later. For now, enter business details on each receipt.</p>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
