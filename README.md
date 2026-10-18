@@ -9,7 +9,7 @@ A modern, offline-first small-business management application (receipts, product
 - Stage 2 foundation complete (design system, navigation, receipt builder, IndexedDB)
 - Stage 3A complete (HTML escaping fix + product catalogue)
 - Stage 3B complete (stock movements, restock, adjustments, physical count reconciliation)
-- Visual redesign complete (premium layout, design system, all screens)
+- Visual redesign phase 2 complete (indigo/violet identity, record tables)
 - Phase 1 scope and roadmap: `docs/PHASE-1-SCOPE-AND-ROADMAP.md`
 
 ## Required software
@@ -73,4 +73,4 @@ receipt-pilot-c/
 
 ## Release notes
 
-See `docs/VISUAL-REDESIGN-REPORT.md` for the latest visual release notes.
+See `docs/VISUAL-REDESIGN-PHASE-2-REPORT.md` for the latest visual release notes.
